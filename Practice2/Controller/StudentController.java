@@ -2,62 +2,94 @@ package Practice2.Controller;
 
 import Practice2.Model.Student;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class StudentController {
-    String url = "jdbc:mysql://localhost:3306/class";
-    String username = "root";
-    String password = "";
+    Scanner sc = new Scanner(System.in);
 
-    public  void AddStudet() {
-        Scanner sc = new Scanner(System.in);
-        try (
-                Connection conn = DriverManager.getConnection(url, username, password);
-                Statement stmt = conn.createStatement();
-        ) {
-            System.out.println("Enter ID: ");
-            String id = sc.nextLine();
+    public void add(ArrayList<Student> arr) {
+        System.out.println("=======================");
+        String addNext;
+        do {
+            System.out.print("Please enter StudentID: ");
+            String newID = sc.nextLine();
+            System.out.print("Please enter Student Name: ");
+            String newName = sc.nextLine();
+            System.out.print("Please enter Address of Student: ");
+            String newAddress = sc.nextLine();
+            System.out.print("Please enter Phone number of student: ");
+            String newPhone = sc.nextLine();
+            arr.add(new Student(newID, newName, newAddress, newPhone));
+            System.out.println("The student you just add is: " + arr.get(arr.size()-1));
 
-            System.out.println("Enter Name: ");
-            String Name = sc.nextLine();
+            System.out.print("Do you want to add more students? (Y/N): ");
+            addNext = sc.nextLine();
+        } while (addNext.equalsIgnoreCase("y"));
 
-            System.out.println("Enter Address: ");
-            String Address = sc.nextLine();
+    }
 
-            System.out.println("Enter Phone: ");
-            String Phone = sc.nextLine();
-        }catch (SQLException ex){
-            ex.printStackTrace();
+    public void display(ArrayList<Student> arr1) {
+        System.out.println("---------------------------");
+        System.out.println("All the student records in the collection is: ");
+        String id = "StudentID";
+        String name = "StudentName";
+        String address = "Address";
+        String phone = "Phone";
+        System.out.printf("%-30s%-30s%-30s%-30s\n", id, name, address, phone);
+        for (Student studentModel: arr1) {
+            System.out.printf("%-30s%-30s%-30s%-30s\n", studentModel.getStudentID(), studentModel.getStudentName(),
+                    studentModel.getAddress(), studentModel.getPhone());
         }
     }
-    public void displayStudent(List<Student> list){
-        System.out.printf("%-30s%-30s%-30s%-30s\n","StudentID","Student Name","Address","Phone");
-        for(int i = 0; i < list.size();i++){
-            System.out.print(list.get(i));
-        }
-    }
-    public boolean updateToDB(List<Student> list){
+
+    public void save(ArrayList<Student> arr2) throws SQLException{
         try (
-                Connection conn = DriverManager.getConnection(url, username, password);
-                Statement stmt = conn.createStatement();
-        ) {
-            String insert;
-            int count = 0;
-            for(int i = 0; i< list.size();i++){
-                insert = "insert into student(studentID,studentName,address,phone) values('"+list.get(i).getStudentID()+"','"+list.get(i).getName()+"','"+list.get(i).getAddress()+"',"+list.get(i).getPhone()+")";
-                count += stmt.executeUpdate(insert);
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/class", "root", "");
+                Statement st = con.createStatement()
+        ) { try {
+            con.setAutoCommit(false);
+            con.commit();
+            int checkUpdate = 0;
+            for (Student studentModel: arr2) {
+                String strUpdate = "insert into Student values ('" + studentModel.getStudentID() + "', '" +
+                        studentModel.getStudentName() + "', '" + studentModel.getAddress() + "', '" +
+                        studentModel.getPhone() + "')";
+                System.out.println("The SQL Insert Statement is: " + strUpdate);
+                if (st.executeUpdate(strUpdate) > 0) checkUpdate++;
             }
-            System.out.println(count + " row(s) affected");
-            return true;
+            con.commit();
+
+            System.out.println("Total " + checkUpdate + " records are saved");
+
+            System.out.println("Check inserted records:");
+            String strSelect = "select * from student";
+            ResultSet rs = st.executeQuery(strSelect);
+            ResultSetMetaData rsMD = rs.getMetaData();
+
+            int numCols = rsMD.getColumnCount();
+            for (int i=1; i<=numCols; i++) {
+                System.out.printf("%-30s", rsMD.getColumnName(i));
+            }
+            System.out.println();
+
+            while (rs.next()) {
+                for (int i=1; i<=numCols; i++) {
+                    System.out.printf("%-30s", rs.getString(i));
+                }
+                System.out.println();
+            }
+
+            con.close();
+            if (con.isClosed()) {
+                System.out.println("Connection closed.");
+            }
         } catch (SQLException ex) {
+            con.rollback();
             ex.printStackTrace();
-            return false;
+            System.exit(-1);
+        }
         }
     }
 }
