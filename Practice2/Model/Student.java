@@ -2,57 +2,58 @@ package Practice2.Model;
 
 public class Student {
     private String studentID;
-    private String name;
+    private String studentName;
     private String address;
-    private int phone;
+    private String phone;
 
-    public Student(){
+    public Student() {
         studentID = "";
-        name = "";
-        address="";
-        phone = 0;
+        studentName = "";
+        address = "";
+        phone = "";
     }
-    public Student(String studentID,String name,String address,int phone){
+
+    public Student(String studentID, String studentName, String address, String phone) {
         this.studentID = studentID;
-        this.name=name;
-        this.address=address;
-        this.phone=phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPhone() {
-        return phone;
+        this.studentName = studentName;
+        this.address = address;
+        this.phone = phone;
     }
 
     public String getStudentID() {
         return studentID;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setPhone(int phone) {
-        this.phone = phone;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setStudentID(String studentID) {
         this.studentID = studentID;
     }
 
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
-        return String.format("%-30s%-30s%-30s%-30d\n",studentID,name,address,phone);
+        return String.format("Student[%s,%s,%s,%s]", studentID, studentName, address, phone);
     }
 }
