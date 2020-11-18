@@ -13,7 +13,7 @@ public class StudentViews {
         ArrayList<Student> student = new ArrayList<>();
         StudentController studentController = new StudentController();
         int choice;
-        System.out.println("Welcome to Student Management System ^^");
+        System.out.println("Welcome to Student");
         do {
             System.out.println("==========================");
             System.out.println("Menu: ");
