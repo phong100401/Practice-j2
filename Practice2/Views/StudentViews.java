@@ -2,62 +2,43 @@ package Practice2.Views;
 
 import Practice2.Controller.StudentController;
 import Practice2.Model.Student;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class StudentViews {
-
-    public static void main(String[] args) {
-        StudentController stdCtrl = new StudentController();
-        StudentViews stdView = new StudentViews();
-        List<Student> stdList = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) throws SQLException {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Student> student = new ArrayList<>();
+        StudentController studentController = new StudentController();
         int choice;
-        do{
-            System.out.println("1. Add student records\n" +
-                    "2. Display student records\n" +
-                    "3. Save\n" +
-                    "4. Exit");
-            System.out.println("Your choice: ");
-            choice = Integer.parseInt(scanner.nextLine());
-            switch (choice){
+        System.out.println("Welcome to Student Management System ^^");
+        do {
+            System.out.println("==========================");
+            System.out.println("Menu: ");
+            System.out.println("1. Add student records");
+            System.out.println("2. Display student records");
+            System.out.println("3. Save new records.");
+            System.out.println("4. Exit the program");
+            System.out.print("Your Choice: ");
+            choice = Integer.parseInt(sc.nextLine());
+            switch (choice) {
                 case 1:
+                    studentController.add(student);
                     break;
                 case 2:
-                    stdCtrl.displayStudent(stdList);
+                    studentController.display(student);
                     break;
                 case 3:
-                    stdCtrl.updateToDB(stdList);
+                    studentController.save(student);
                     break;
                 case 4:
-                    System.out.println("Thank you. Goodbye!");
+                    System.out.println("Exit!");
                     break;
                 default:
-                    System.out.println("Invalid choice");
-                    break;
+                    System.out.println("Invalid input... Please try again");
             }
-        }while (choice != 4);
-    }
-
-    public class StudentView {
-        List<Student> stdList = new ArrayList<>();
-
-        public List<Student> addStudent() {
-            StudentController stdCrl = new StudentController();
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter Student ID: ");
-            String id = scanner.nextLine();
-            System.out.println("Enter Student Name:");
-            String name = scanner.nextLine();
-            System.out.println("Enter Student Address:");
-            String address = scanner.nextLine();
-            System.out.println("Enter Student Phone:");
-            int phone = Integer.parseInt(scanner.nextLine());
-            Student obj = new Student(id, name, address, phone);
-            stdList.add(obj);
-            System.out.println("Student has been added");
-            return stdList;
-        }
+        } while (choice != 4);
     }
 }
