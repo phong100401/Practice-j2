@@ -37,7 +37,7 @@ public class StudentViews {
                     System.out.println("Exit!");
                     break;
                 default:
-                    System.out.println("Invalid input... Please try again");
+                    System.out.println("Please try again");
             }
         } while (choice != 4);
     }
